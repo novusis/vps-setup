@@ -47,8 +47,15 @@ findtime = 10m
 EOF
 
 systemctl restart fail2ban
-fail2ban-client status
-fail2ban-client status sshd
+# Проверка статуса службы
+if systemctl is-active --quiet fail2ban; then
+    echo "✅ fail2ban успешно запущен"
+    fail2ban-client status
+    fail2ban-client status sshd
+else
+    echo "❌ Ошибка: fail2ban не запущен"
+    journalctl -u fail2ban --no-pager -n 20
+fi
 
 echo "🐳 Установка Docker..."
 apt install -y ca-certificates curl gnupg lsb-release
@@ -67,7 +74,7 @@ apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker
 docker --version
 
 echo "✅ Настройка завершена успешно."
-echo "[0.0.1]"
+echo "[0.0.2]"
 echo "📋 Установленные компоненты:"
 echo "   - Git: $(git --version)"
 echo "   - UFW: активен"
