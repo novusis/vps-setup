@@ -73,6 +73,14 @@ apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker
 
 docker --version
 
+echo "🔀 Созание swap 1.5 гб ..."
+fallocate -l 1.5G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+
+
 echo "✅ Настройка завершена успешно."
 echo "[0.0.2]"
 echo "📋 Установленные компоненты:"
@@ -80,6 +88,7 @@ echo "   - Git: $(git --version)"
 echo "   - UFW: активен"
 echo "   - Fail2ban: активен"
 echo "   - Docker: $(docker --version)"
+echo "   - Swap 1.5 гб"
 echo ""
 echo "🔒 Рекомендации по безопасности:"
 echo "   - Измените стандартный SSH порт"
